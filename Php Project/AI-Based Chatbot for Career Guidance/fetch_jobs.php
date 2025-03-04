@@ -1,3 +1,4 @@
+
 /* Career Guidance Chatbot - Fetch Job Listings */
 <?php
 // fetch_jobs.php

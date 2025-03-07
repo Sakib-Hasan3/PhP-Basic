@@ -1,4 +1,3 @@
-
 /* Chat System */
 <?php
 // chat.php

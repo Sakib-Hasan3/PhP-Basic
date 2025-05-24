@@ -2,41 +2,32 @@
 session_start();
 require '../db.php';
 
-// Initialize message variable to store error or success messages
+// Initialize message variable
 $message = "";
+$success = false;
 
 // Check if the form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = htmlspecialchars($_POST['email']);
+    $username = htmlspecialchars($_POST['username']);
     $password = htmlspecialchars($_POST['password']);
-    
-    // Check if confirm_password exists in the POST array
     $confirm_password = isset($_POST['confirm_password']) ? htmlspecialchars($_POST['confirm_password']) : '';
 
-    $username = htmlspecialchars($_POST['username']);
-    
     // Check if email already exists
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
     $stmt->execute([$email]);
-    
-    // Proceed only if email is not already registered
+
     if ($stmt->rowCount() > 0) {
-        // If email already exists, show an error message
         $message = "This email is already registered. Please choose another one.";
     } elseif ($password !== $confirm_password) {
-        // If passwords don't match, show an error message
         $message = "Passwords do not match. Please try again.";
     } else {
-        // If email does not exist and passwords match, proceed with the registration
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Insert the new user into the database
         $stmt = $conn->prepare("INSERT INTO users (email, password, username, created_at) VALUES (?, ?, ?, NOW())");
         if ($stmt->execute([$email, $hashedPassword, $username])) {
-            // If registration is successful
-            $message = "Registration successful. You can now log in.";
+            $message = "Registration successful. You can now <a href='login.php'>log in</a>.";
+            $success = true;
         } else {
-            // Error during registration
             $message = "Error: Could not complete registration.";
         }
     }
@@ -49,12 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Register - CSE Study Room</title>
     <style>
-        /* Inline CSS for styling the registration form */
         body {
             font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
             margin: 0;
             padding: 0;
-            background-color: #f2f2f2;
         }
         .container {
             max-width: 400px;
@@ -88,11 +78,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #45a049;
         }
         .message {
-            color: red;
             text-align: center;
             margin: 10px 0;
+            font-weight: bold;
         }
-        .success {
+        .message.error {
+            color: red;
+        }
+        .message.success {
             color: green;
         }
         .login-link {
@@ -114,10 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2>Register</h2>
 
     <?php if (!empty($message)): ?>
-        <p class="message"><?php echo $message; ?></p>
+        <p class="message <?= $success ? 'success' : 'error' ?>"><?= $message ?></p>
     <?php endif; ?>
 
-    <form method="POST" action="">
+    <form method="POST" action="register.php">
         <input type="email" name="email" placeholder="Enter your email" required>
         <input type="text" name="username" placeholder="Enter your username" required>
         <input type="password" name="password" placeholder="Enter your password" required>

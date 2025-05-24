@@ -1,59 +1,69 @@
 <?php
 session_start();
+include('../db.php');
 
-// Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header('Location: ../auth/login.php');
     exit();
 }
 
-include('db.php'); // Database connection
-
-$message = "";
-
-// Handle the form submission for asking a question
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $question = htmlspecialchars($_POST['question']);
-    $user_id = $_SESSION['user_id'];
-
-    if (!empty($question)) {
-        // Insert the question into the database
-        $sql = "INSERT INTO questions (user_id, question, created_at) VALUES (?, ?, NOW())";
-        $stmt = $conn->prepare($sql);
-
-        if ($stmt->execute([$user_id, $question])) {
-            $message = "Your question has been submitted successfully!";
-        } else {
-            $message = "Error: Could not submit the question.";
-        }
+// Handle new question submission
+$message = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty(trim($_POST['question']))) {
+    $stmt = $conn->prepare("INSERT INTO questions (user_id, question) VALUES (?, ?)");
+    if ($stmt->execute([ $_SESSION['user_id'], trim($_POST['question']) ])) {
+        $message = "Your question has been posted!";
     } else {
-        $message = "Please enter a question.";
+        $message = "Failed to post. Please try again.";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Ask a Question - CSE Study Room</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <title>Ask a Question – CSE Study Room</title>
+  <link rel="stylesheet" href="../assets/css/questions.css">
 </head>
 <body>
+
+<!-- Navigation Bar -->
+<nav class="nav">
+  <div class="nav__brand">CSE Study Room</div>
+  <ul class="nav__links">
+    <li><a href="../pages/dashboard.php">Dashboard</a></li>
+    <li><a href="../pages/courses.php">Courses</a></li>
+    <li><a href="../pages/jobs.php">Jobs</a></li>
+    <li><a href="../pages/mentorship.php">Mentorship</a></li>
+    <li><a href="../auth/logout.php" class="nav__logout">Logout</a></li>
+  </ul>
+</nav>
+
+<!-- Hero Banner -->
+<section class="hero">
+  <h1 class="hero-title">Ask a Question</h1>
+  <p class="hero-subtitle">Stuck on a topic? Ask your CSE-related question and get help from others.</p>
+</section>
+
 <div class="container">
-    <h2>Ask a Question</h2>
-    <form method="POST" action="">
-        <textarea name="question" placeholder="Type your question here..." required></textarea><br><br>
-        <button type="submit" class="btn">Submit Question</button>
+
+  <!-- Question Form -->
+  <div class="question-form-card">
+    <h2>Ask a New Question</h2>
+    <form method="POST">
+      <textarea name="question" rows="4" placeholder="Type your question here..." required></textarea>
+      <button type="submit" class="btn">Post Question</button>
     </form>
+    <?php if ($message): ?>
+      <p class="message"><?= htmlspecialchars($message) ?></p>
+    <?php endif; ?>
+  </div>
 
-    <!-- Display submission message -->
-    <p><?php echo $message; ?></p>
+  <!-- Button to View All Questions -->
+  <div class="section">
+    <a href="questions_list.php" class="btn">View All Questions</a>
+  </div>
 
-    <!-- Go Back to Dashboard -->
-    <div class="section">
-        <a href="dashboard.php" class="btn">Back to Dashboard</a>
-    </div>
 </div>
 </body>
 </html>

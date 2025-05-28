@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2025 at 02:46 PM
+-- Generation Time: May 28, 2025 at 11:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,8 @@ CREATE TABLE `answers` (
 
 INSERT INTO `answers` (`id`, `question_id`, `user_id`, `answer`, `created_at`) VALUES
 (1, 2, 1, 'dnjsdnjksdjkds', '2025-05-23 12:13:38'),
-(2, 3, 1, 'erjfdn', '2025-05-23 12:19:04');
+(2, 3, 1, 'erjfdn', '2025-05-23 12:19:04'),
+(3, 4, 4, 'cse means computer science and engineering!', '2025-05-24 12:27:08');
 
 -- --------------------------------------------------------
 
@@ -85,26 +86,43 @@ CREATE TABLE `courses` (
   `provider` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `link` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `content_type` varchar(50) DEFAULT NULL,
+  `content_path` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`id`, `title`, `provider`, `description`, `link`, `created_at`) VALUES
-(1, 'Intro to Computer Science', 'Harvard (CS50)', 'Learn the basics of computer science, algorithms, and programming.', 'https://cs50.harvard.edu/x/', '2025-05-18 08:32:49'),
-(2, 'Responsive Web Design', 'freeCodeCamp', 'Master HTML, CSS, Flexbox, and more with hands-on projects.', 'https://www.freecodecamp.org/learn', '2025-05-18 08:32:49'),
-(3, 'Web Development Bootcamp', 'freeCodeCamp', 'A full curriculum covering HTML, CSS, JavaScript, front-end libraries, APIs, back-end development, and more.', 'https://www.freecodecamp.org/learn', '2025-05-19 05:50:34'),
-(4, 'Python for Everybody', 'Coursera / University of Michigan', 'Learn Python programming from scratch and how to use it for data access, web APIs, and databases.', 'https://www.coursera.org/specializations/python', '2025-05-19 05:50:34'),
-(5, 'Machine Learning', 'Coursera / Stanford (Andrew Ng)', 'The famous machine learning course by Andrew Ng covering supervised learning, unsupervised learning, and best practices.', 'https://www.coursera.org/learn/machine-learning', '2025-05-19 05:50:34'),
-(6, 'Full Stack Open', 'University of Helsinki', 'Hands-on full stack development course covering React, Node.js, MongoDB, GraphQL, TypeScript, and more.', 'https://fullstackopen.com/en/', '2025-05-19 05:50:34'),
-(7, 'The Complete SQL Bootcamp', 'Udemy', 'A practical SQL course covering querying, joins, aggregations, and databases with PostgreSQL.', 'https://www.udemy.com/course/the-complete-sql-bootcamp/', '2025-05-19 05:50:34'),
-(8, 'Introduction to Cybersecurity', 'Cisco Networking Academy', 'Learn the basics of cybersecurity, how threats work, and how to defend networks and data.', 'https://www.netacad.com/courses/cybersecurity/introduction-cybersecurity', '2025-05-19 05:50:34'),
-(9, 'DevOps on AWS Specialization', 'Coursera / AWS', 'Build, test, and deploy applications using AWS and DevOps practices like CI/CD, monitoring, and automation.', 'https://www.coursera.org/specializations/aws-devops', '2025-05-19 05:50:34'),
-(10, 'MIT OpenCourseWare: Introduction to Algorithms', 'MIT OCW', 'Advanced course on algorithms and data structures used in computer science, from MIT.', 'https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/', '2025-05-19 05:50:34'),
-(11, 'CS50: Introduction to Computer Science', 'Harvard / edX', 'A comprehensive introduction to computer science for beginners, covering algorithms, data structures, web development, and more.', 'https://cs50.harvard.edu/x/', '2025-05-19 05:51:31'),
-(12, 'Google IT Support Professional Certificate', 'Coursera / Google', 'Learn the fundamentals of IT support including troubleshooting, networking, system administration, and security.', 'https://www.coursera.org/professional-certificates/google-it-support', '2025-05-19 05:51:31');
+INSERT INTO `courses` (`id`, `title`, `provider`, `description`, `link`, `created_at`, `content_type`, `content_path`) VALUES
+(1, 'Intro to Computer Science', 'Harvard (CS50)', 'Learn the basics of computer science, algorithms, and programming.', 'https://cs50.harvard.edu/x/', '2025-05-18 08:32:49', NULL, NULL),
+(2, 'Responsive Web Design', 'freeCodeCamp', 'Master HTML, CSS, Flexbox, and more with hands-on projects.', 'https://www.freecodecamp.org/learn', '2025-05-18 08:32:49', NULL, NULL),
+(3, 'Web Development Bootcamp', 'freeCodeCamp', 'A full curriculum covering HTML, CSS, JavaScript, front-end libraries, APIs, back-end development, and more.', 'https://www.freecodecamp.org/learn', '2025-05-19 05:50:34', NULL, NULL),
+(4, 'Python for Everybody', 'Coursera / University of Michigan', 'Learn Python programming from scratch and how to use it for data access, web APIs, and databases.', 'https://www.coursera.org/specializations/python', '2025-05-19 05:50:34', NULL, NULL),
+(5, 'Machine Learning', 'Coursera / Stanford (Andrew Ng)', 'The famous machine learning course by Andrew Ng covering supervised learning, unsupervised learning, and best practices.', 'https://www.coursera.org/learn/machine-learning', '2025-05-19 05:50:34', NULL, NULL),
+(6, 'Full Stack Open', 'University of Helsinki', 'Hands-on full stack development course covering React, Node.js, MongoDB, GraphQL, TypeScript, and more.', 'https://fullstackopen.com/en/', '2025-05-19 05:50:34', NULL, NULL),
+(7, 'The Complete SQL Bootcamp', 'Udemy', 'A practical SQL course covering querying, joins, aggregations, and databases with PostgreSQL.', 'https://www.udemy.com/course/the-complete-sql-bootcamp/', '2025-05-19 05:50:34', NULL, NULL),
+(8, 'Introduction to Cybersecurity', 'Cisco Networking Academy', 'Learn the basics of cybersecurity, how threats work, and how to defend networks and data.', 'https://www.netacad.com/courses/cybersecurity/introduction-cybersecurity', '2025-05-19 05:50:34', NULL, NULL),
+(9, 'DevOps on AWS Specialization', 'Coursera / AWS', 'Build, test, and deploy applications using AWS and DevOps practices like CI/CD, monitoring, and automation.', 'https://www.coursera.org/specializations/aws-devops', '2025-05-19 05:50:34', NULL, NULL),
+(10, 'MIT OpenCourseWare: Introduction to Algorithms', 'MIT OCW', 'Advanced course on algorithms and data structures used in computer science, from MIT.', 'https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/', '2025-05-19 05:50:34', NULL, NULL),
+(11, 'CS50: Introduction to Computer Science', 'Harvard / edX', 'A comprehensive introduction to computer science for beginners, covering algorithms, data structures, web development, and more.', 'https://cs50.harvard.edu/x/', '2025-05-19 05:51:31', NULL, NULL),
+(12, 'Google IT Support Professional Certificate', 'Coursera / Google', 'Learn the fundamentals of IT support including troubleshooting, networking, system administration, and security.', 'https://www.coursera.org/professional-certificates/google-it-support', '2025-05-19 05:51:31', NULL, NULL),
+(13, 'Introduction to Data Structures', '', 'A beginner-friendly overview of fundamental data structures used in programming.', '', '2025-05-27 22:03:55', 'html', '<h3>What You’ll Learn:</h3><ul><li>Arrays and Linked Lists</li><li>Stacks and Queues</li><li>Trees and Graphs</li></ul><p>This course includes examples in C/C++ and Python with visual explanations.</p>');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `forum_posts`
+--
+
+CREATE TABLE `forum_posts` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -246,8 +264,11 @@ INSERT INTO `mentorship_requests` (`id`, `mentor_id`, `user_id`, `message`, `sta
 (2, 1, 1, 'ghjghj', 'pending', '2025-05-19 12:53:24'),
 (3, 9, 1, 'dkndm,sdn,mds', 'approved', '2025-05-21 04:24:16'),
 (4, 12, 1, 'fksdsdl', 'pending', '2025-05-23 10:41:06'),
-(5, 8, 1, 'djsdlsd', 'pending', '2025-05-23 10:59:05'),
-(6, 9, 1, 'md', 'approved', '2025-05-23 11:03:54');
+(5, 8, 1, 'djsdlsd', 'approved', '2025-05-23 10:59:05'),
+(6, 9, 1, 'md', 'approved', '2025-05-23 11:03:54'),
+(7, 9, 1, 'fmfd', 'approved', '2025-05-23 20:05:39'),
+(8, 8, 4, 'wdjjksdnkjds', 'approved', '2025-05-24 12:21:04'),
+(9, 8, 4, 'dkjnjsdfjnds', 'pending', '2025-05-24 12:25:58');
 
 -- --------------------------------------------------------
 
@@ -334,7 +355,8 @@ CREATE TABLE `questions` (
 INSERT INTO `questions` (`id`, `user_id`, `question`, `created_at`) VALUES
 (1, 1, 'what is cse?', '2025-05-23 11:21:58'),
 (2, 1, 'what is cse?', '2025-05-23 11:27:20'),
-(3, 1, 'skfklsd', '2025-05-23 11:34:43');
+(3, 1, 'skfklsd', '2025-05-23 11:34:43'),
+(4, 4, 'what is cse???', '2025-05-24 12:26:44');
 
 -- --------------------------------------------------------
 
@@ -389,7 +411,9 @@ CREATE TABLE `study_groups` (
 
 INSERT INTO `study_groups` (`id`, `mentor_id`, `user_id`, `created_at`) VALUES
 (1, 9, 1, '2025-05-23 11:03:58'),
-(2, 9, 1, '2025-05-23 11:04:02');
+(2, 9, 1, '2025-05-23 11:04:02'),
+(3, 9, 1, '2025-05-23 22:32:35'),
+(5, 8, 1, '2025-05-24 12:26:01');
 
 -- --------------------------------------------------------
 
@@ -444,7 +468,9 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `email`, `username`, `password`, `created_at`) VALUES
 (1, 'sakibnghs123@gmail.com', 'sakib3139', '$2y$10$8nknVArU5PmVzMrCMCiujOTTUOONdrAZprpJ8baX6tTDSNJONkYSu', '2025-05-18 08:30:07'),
 (2, 'naimasultanarimi07@gmail.com', 'sakib3139', '$2y$10$c54YRwZlPpYQRIuwsbiMs.iEMDKBobIWPo4OsoyrhKf2gLkhkIJha', '2025-05-18 08:30:29'),
-(3, 'prosenjit1156@gmail.com', 'Prosenjit Mondol', '$2y$10$LkCOQ5OQsaVS9vzOmJmiDegsSXxJOMGroLRe8K7ONydVqpN9RyidC', '2025-05-19 19:30:56');
+(3, 'prosenjit1156@gmail.com', 'Prosenjit Mondol', '$2y$10$LkCOQ5OQsaVS9vzOmJmiDegsSXxJOMGroLRe8K7ONydVqpN9RyidC', '2025-05-19 19:30:56'),
+(4, 'sadiareshma@12gmail.com', 'sadiareshma', '$2y$10$C2AtP5p3o1X0FZ6o58QAiOSi0nNO4wOmcZegwHANM20vaYnZpoGZS', '2025-05-24 12:19:29'),
+(5, 'abc@gmail.com', 'sakibnghs', '$2y$10$cTUTzdX2I4ogog5gJ4zYA.tyNuwQ1eKM7cR6kYXkYsduiGpUG9cLa', '2025-05-26 09:26:13');
 
 -- --------------------------------------------------------
 
@@ -482,6 +508,13 @@ ALTER TABLE `career_roadmap`
 --
 ALTER TABLE `courses`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `forum_posts`
+--
+ALTER TABLE `forum_posts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `group_definitions`
@@ -579,7 +612,7 @@ ALTER TABLE `user_groups`
 -- AUTO_INCREMENT for table `answers`
 --
 ALTER TABLE `answers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `career_roadmap`
@@ -591,7 +624,13 @@ ALTER TABLE `career_roadmap`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `forum_posts`
+--
+ALTER TABLE `forum_posts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `group_definitions`
@@ -621,7 +660,7 @@ ALTER TABLE `mentors`
 -- AUTO_INCREMENT for table `mentorship_requests`
 --
 ALTER TABLE `mentorship_requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `news`
@@ -639,7 +678,7 @@ ALTER TABLE `projects`
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `resources`
@@ -651,7 +690,7 @@ ALTER TABLE `resources`
 -- AUTO_INCREMENT for table `study_groups`
 --
 ALTER TABLE `study_groups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tips`
@@ -663,7 +702,7 @@ ALTER TABLE `tips`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `user_groups`
@@ -681,6 +720,12 @@ ALTER TABLE `user_groups`
 ALTER TABLE `answers`
   ADD CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `questions` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `answers_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `forum_posts`
+--
+ALTER TABLE `forum_posts`
+  ADD CONSTRAINT `forum_posts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `group_members`

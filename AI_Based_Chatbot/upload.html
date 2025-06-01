@@ -1,0 +1,209 @@
+<?php
+include 'session.php'; // Ensure the user is logged in
+include 'db.php'; // Include database connection
+
+// Handle file upload
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['cv'])) {
+    $targetDir = "uploads/";
+    $targetFile = $targetDir . basename($_FILES['cv']['name']);
+    $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+
+    // Validate file type (only allow PDF)
+    if ($fileType !== "pdf") {
+        $_SESSION['error'] = "Only PDF files are allowed.";
+    } elseif (move_uploaded_file($_FILES['cv']['tmp_name'], $targetFile)) {
+        // Save file path to the database
+        $userId = $_SESSION['user_id'];
+        $cvPath = $targetFile;
+        $stmt = $conn->prepare("INSERT INTO user_cvs (user_id, cv_path) VALUES (?, ?)");
+        $stmt->bind_param("is", $userId, $cvPath);
+
+        if ($stmt->execute()) {
+            $_SESSION['message'] = "CV uploaded successfully!";
+        } else {
+            $_SESSION['error'] = "Failed to upload CV. Please try again.";
+        }
+        $stmt->close();
+    } else {
+        $_SESSION['error'] = "Failed to upload CV. Please try again.";
+    }
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CV</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+        }
+        .upload-section {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .upload-section h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        .upload-section .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .upload-section .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .resume-section {
+            margin-top: 30px;
+        }
+        .resume-section h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        #resumeTemplate {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #resumeTemplate h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+        #resumeTemplate h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        #resumeTemplate p {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Upload CV Section -->
+        <div class="upload-section">
+            <h1>Upload Your CV</h1>
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['message'])): ?>
+                <div class="alert alert-success"><?php echo $_SESSION['message']; unset($_SESSION['message']); ?></div>
+            <?php endif; ?>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="cv" class="form-label">Choose a PDF file</label>
+                    <input type="file" class="form-control" name="cv" accept=".pdf" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload CV</button>
+            </form>
+        </div>
+
+        <!-- Create Resume Section -->
+        <div class="resume-section">
+            <h2>Create Your Resume</h2>
+            <form id="resumeForm">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="phone" required>
+                </div>
+                <div class="mb-3">
+                    <label for="education" class="form-label">Education</label>
+                    <textarea class="form-control" id="education" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="experience" class="form-label">Work Experience</label>
+                    <textarea class="form-control" id="experience" rows="3" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="skills" class="form-label">Skills</label>
+                    <textarea class="form-control" id="skills" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Generate Resume</button>
+            </form>
+        </div>
+
+        <!-- Hidden Resume Template -->
+        <div id="resumeTemplate" style="display: none;">
+            <h1 id="resumeName"></h1>
+            <p><strong>Email:</strong> <span id="resumeEmail"></span></p>
+            <p><strong>Phone:</strong> <span id="resumePhone"></span></p>
+            <h2>Education</h2>
+            <p id="resumeEducation"></p>
+            <h2>Work Experience</h2>
+            <p id="resumeExperience"></p>
+            <h2>Skills</h2>
+            <p id="resumeSkills"></p>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        document.getElementById('resumeForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Get user input
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const education = document.getElementById('education').value;
+            const experience = document.getElementById('experience').value;
+            const skills = document.getElementById('skills').value;
+
+            // Populate the resume template
+            document.getElementById('resumeName').innerText = name;
+            document.getElementById('resumeEmail').innerText = email;
+            document.getElementById('resumePhone').innerText = phone;
+            document.getElementById('resumeEducation').innerText = education;
+            document.getElementById('resumeExperience').innerText = experience;
+            document.getElementById('resumeSkills').innerText = skills;
+
+            // Generate PDF
+            const element = document.getElementById('resumeTemplate');
+            const opt = {
+                margin: 10,
+                filename: `${name}_Resume.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save();
+        });
+    </script>
+</body>
+</html>

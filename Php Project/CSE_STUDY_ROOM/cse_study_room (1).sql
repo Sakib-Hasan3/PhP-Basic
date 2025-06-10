@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 28, 2025 at 11:46 AM
+-- Generation Time: Jun 10, 2025 at 07:10 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -73,6 +73,22 @@ INSERT INTO `career_roadmap` (`id`, `career_name`, `description`, `steps`, `reso
 (8, 'Cloud Engineer', 'Design and manage cloud infrastructure and services.', '1. Master one cloud provider (AWS, GCP, Azure) ; 2. Learn virtualization & networking in cloud ; 3. Deploy applications with containers & serverless ; 4. Implement security best practices ; 5. Automate with Terraform & CloudFormation ; 6. Optimize cost and performance', 'Google Cloud Professional Cloud Architect: https://www.coursera.org/professional-certificates/gcp-architecture ; AWS Solutions Architect – Associate: https://aws.amazon.com/training'),
 (9, 'Database Administrator', 'Design, implement, and maintain database systems.', '1. Learn SQL and relational theory ; 2. Study a major RDBMS (MySQL, PostgreSQL, Oracle) ; 3. Understand backup, recovery, and replication ; 4. Optimize performance with indexing & tuning ; 5. Implement security and encryption ; 6. Automate maintenance tasks', 'Udemy The Complete SQL Bootcamp: https://www.udemy.com/course/the-complete-sql-bootcamp/ ; Oracle Database 12c Administration: https://education.oracle.com'),
 (10, 'Network Engineer', 'Plan, implement, and troubleshoot network infrastructures.', '1. Master TCP/IP and OSI model ; 2. Learn routing & switching fundamentals ; 3. Configure firewalls and VPNs ; 4. Implement VLANs and network security ; 5. Monitor with SNMP & NetFlow ; 6. Prepare for certification exams', 'Cisco CCNA via NetAcad: https://www.netacad.com/courses/networking/ccna ; Coursera Networking Fundamentals: https://www.coursera.org/learn/networking-basics');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `challenges`
+--
+
+CREATE TABLE `challenges` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `category` varchar(50) NOT NULL,
+  `input_example` text DEFAULT NULL,
+  `output_example` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -418,6 +434,22 @@ INSERT INTO `study_groups` (`id`, `mentor_id`, `user_id`, `created_at`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `submissions`
+--
+
+CREATE TABLE `submissions` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `challenge_id` int(11) NOT NULL,
+  `code` text NOT NULL,
+  `language` varchar(50) NOT NULL,
+  `status` enum('Pending','Accepted','Wrong Answer','Time Limit Exceeded') DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tips`
 --
 
@@ -458,19 +490,20 @@ CREATE TABLE `users` (
   `email` varchar(255) NOT NULL,
   `username` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `role` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `username`, `password`, `created_at`) VALUES
-(1, 'sakibnghs123@gmail.com', 'sakib3139', '$2y$10$8nknVArU5PmVzMrCMCiujOTTUOONdrAZprpJ8baX6tTDSNJONkYSu', '2025-05-18 08:30:07'),
-(2, 'naimasultanarimi07@gmail.com', 'sakib3139', '$2y$10$c54YRwZlPpYQRIuwsbiMs.iEMDKBobIWPo4OsoyrhKf2gLkhkIJha', '2025-05-18 08:30:29'),
-(3, 'prosenjit1156@gmail.com', 'Prosenjit Mondol', '$2y$10$LkCOQ5OQsaVS9vzOmJmiDegsSXxJOMGroLRe8K7ONydVqpN9RyidC', '2025-05-19 19:30:56'),
-(4, 'sadiareshma@12gmail.com', 'sadiareshma', '$2y$10$C2AtP5p3o1X0FZ6o58QAiOSi0nNO4wOmcZegwHANM20vaYnZpoGZS', '2025-05-24 12:19:29'),
-(5, 'abc@gmail.com', 'sakibnghs', '$2y$10$cTUTzdX2I4ogog5gJ4zYA.tyNuwQ1eKM7cR6kYXkYsduiGpUG9cLa', '2025-05-26 09:26:13');
+INSERT INTO `users` (`id`, `email`, `username`, `password`, `created_at`, `role`) VALUES
+(1, 'sakibnghs123@gmail.com', 'sakib3139', '$2y$10$8nknVArU5PmVzMrCMCiujOTTUOONdrAZprpJ8baX6tTDSNJONkYSu', '2025-05-18 08:30:07', ''),
+(2, 'naimasultanarimi07@gmail.com', 'sakib3139', '$2y$10$c54YRwZlPpYQRIuwsbiMs.iEMDKBobIWPo4OsoyrhKf2gLkhkIJha', '2025-05-18 08:30:29', ''),
+(3, 'prosenjit1156@gmail.com', 'Prosenjit Mondol', '$2y$10$LkCOQ5OQsaVS9vzOmJmiDegsSXxJOMGroLRe8K7ONydVqpN9RyidC', '2025-05-19 19:30:56', ''),
+(4, 'sadiareshma@12gmail.com', 'sadiareshma', '$2y$10$C2AtP5p3o1X0FZ6o58QAiOSi0nNO4wOmcZegwHANM20vaYnZpoGZS', '2025-05-24 12:19:29', ''),
+(5, 'abc@gmail.com', 'sakibnghs', '$2y$10$cTUTzdX2I4ogog5gJ4zYA.tyNuwQ1eKM7cR6kYXkYsduiGpUG9cLa', '2025-05-26 09:26:13', '');
 
 -- --------------------------------------------------------
 
@@ -501,6 +534,12 @@ ALTER TABLE `answers`
 -- Indexes for table `career_roadmap`
 --
 ALTER TABLE `career_roadmap`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `challenges`
+--
+ALTER TABLE `challenges`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -584,6 +623,14 @@ ALTER TABLE `study_groups`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `submissions`
+--
+ALTER TABLE `submissions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `challenge_id` (`challenge_id`);
+
+--
 -- Indexes for table `tips`
 --
 ALTER TABLE `tips`
@@ -619,6 +666,12 @@ ALTER TABLE `answers`
 --
 ALTER TABLE `career_roadmap`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `challenges`
+--
+ALTER TABLE `challenges`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `courses`
@@ -693,6 +746,12 @@ ALTER TABLE `study_groups`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `submissions`
+--
+ALTER TABLE `submissions`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `tips`
 --
 ALTER TABLE `tips`
@@ -753,6 +812,13 @@ ALTER TABLE `questions`
 ALTER TABLE `study_groups`
   ADD CONSTRAINT `fk_sg_mentors` FOREIGN KEY (`mentor_id`) REFERENCES `mentors` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_sg_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `submissions`
+--
+ALTER TABLE `submissions`
+  ADD CONSTRAINT `submissions_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  ADD CONSTRAINT `submissions_ibfk_2` FOREIGN KEY (`challenge_id`) REFERENCES `challenges` (`id`);
 
 --
 -- Constraints for table `user_groups`

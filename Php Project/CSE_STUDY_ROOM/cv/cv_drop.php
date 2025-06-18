@@ -1,4 +1,3 @@
-
 <?php
 // Check if session is already started before calling session_start
 if (session_status() == PHP_SESSION_NONE) {
